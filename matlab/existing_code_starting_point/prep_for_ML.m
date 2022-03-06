@@ -386,7 +386,7 @@ end
 if cut == 1
     disp('TODO');
 else
-    save('outputs/output_full_data_raw.mat','output_raw', '-v7.3');
-    save('outputs/output_full_data_f.mat','output_f', '-v7.3');
-    save('outputs/output_full_data_re.mat','output_re', '-v7.3');
+    save('outputs/output_full_data_raw.mat','output_raw');
+    save('outputs/output_full_data_f.mat','output_f');
+    save('outputs/output_full_data_re.mat','output_re');
 end
