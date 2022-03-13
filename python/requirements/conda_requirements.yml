@@ -208,7 +208,7 @@ dependencies:
     - patsy==0.5.1
     - psutil==5.8.0
     - pydotplus==2.0.2
-    - python-graphviz==0.15
+    - graphviz==0.15
     - pywavelets==1.1.1
     - scikit-image==0.17.2
     - seaborn==0.11.0
@@ -224,4 +224,3 @@ dependencies:
     - tsfresh==0.17.0
     - wrangle==0.6.7
     - zict==2.0.0
-prefix: /home/gasper/miniconda3/envs/py38_radar
