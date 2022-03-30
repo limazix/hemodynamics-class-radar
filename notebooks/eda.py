@@ -53,6 +53,8 @@ bp_num_samples = len(data['tfm_bp'])
 # %%
 radar_sample_time = [radar_time_btw_sample*i for i in range(radar_num_samples)]
 bp_sample_time = [bp_time_btw_sample*i for i in range(bp_num_samples)]
+
+bp_sample_rate
 # %%
 
 # 1s * n
@@ -80,44 +82,16 @@ fig.add_trace(go.Line(x=bp_sample_time[:bp_timeframe], y=rradar_q[:bp_timeframe]
 fig.show()
 
 # %%
-# To frequency domain
-
-freq_radar_i = fft(rradar_i)
-freq_radar_q = fft(rradar_q)
-freq_bp = fft(data['tfm_bp'])
-
-# %%
-
-fig = go.Figure()
-
-fig.add_trace(go.Line(y=np.abs(freq_radar_i), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-fig.add_trace(go.Line(y=np.abs(freq_radar_q), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-fig.add_trace(go.Line(y=np.abs(freq_bp), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-
-fig.show()
-
-# %%
 # Butterworth Filtering
 
-sos = signal.butter(5, [0.01, 20.0], 'bandpass', analog=True)
+# Nyquist Frequency
+nyq = bp_sample_rate*0.5
 
-ffreq_radar_q = signal.freqs(sos, freq_radar_q)
-ffreq_radar_i = signal.sosfilt(sos, freq_radar_i)
+b, a = signal.butter(4, [0.01/nyq, 20.0/nyq], 'bandpass')
+zi = signal.lfilter_zi(b, a)
 
-# %%
-fig = go.Figure()
-
-fig.add_trace(go.Line(y=np.abs(ffreq_radar_i), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-fig.add_trace(go.Line(y=np.abs(ffreq_radar_q), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-#fig.add_trace(go.Line(y=np.abs(freq_bp), x=fftfreq(bp_num_samples, bp_sample_time[-1])))
-
-fig.show()
-
-# %%
-# Back to time domain
-
-frradar_q = ifft(ffreq_radar_q)
-frradar_i = ifft(ffreq_radar_i)
+frradar_q, _ = signal.lfilter(b, a, rradar_q, zi=zi*rradar_q[0])
+frradar_i, _ = signal.lfilter(b, a, rradar_i, zi=zi*rradar_i[0])
 
 # %%
 fig = go.Figure()
